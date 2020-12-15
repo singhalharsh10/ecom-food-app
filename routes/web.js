@@ -18,7 +18,7 @@ function initRoutes(app) {
     app.post('/register', authController().postRegister)
 
     app.post('/orders', orderController().store)
-
+    app.get('/customer/orders', orderController().index)
 }
 
 
