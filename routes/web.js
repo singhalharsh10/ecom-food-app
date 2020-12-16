@@ -3,6 +3,7 @@ const homeController = require('../app/http/controllers/homeController')
 const cartController = require('../app/http/controllers/customers/cartController')
 const orderController = require('../app/http/controllers/customers/orderController')
 const AdminOrderController = require('../app/http/controllers/admin/orderController')
+const StatusController = require('../app/http/controllers/admin/statusController')
 
 
 //Middlewares
@@ -31,6 +32,8 @@ function initRoutes(app) {
 
     //Admin Rotes
     app.get('/admin/orders', admin, AdminOrderController().index)
+    app.post('/admin/order/status', admin, StatusController().update)
+
 
 
 }
