@@ -11,7 +11,7 @@
  const { urlencoded } = require('express')
  const MongoDbStore = require('connect-mongo')(session)
  const passport = require('passport')
-
+ const Emitter = require('events')
 
  // Database Connection
  const url = 'mongodb://localhost/pizza';
@@ -31,7 +31,9 @@
  })
 
 
-
+ //Event emitter
+ const eventEmitter = new Emitter()
+ app.set('eventEmitter', eventEmitter)
 
 
  //Session Config
@@ -76,6 +78,27 @@
 
 
 
- app.listen(PORT, () => {
+ const server = app.listen(PORT, () => {
      console.log(`Server has started on port ${PORT}`)
+ })
+
+
+ const io = require('socket.io')(server)
+ io.on('connection', (socket) => {
+     //Join  
+     console.log(socket.id)
+     socket.on('join', (orderId) => {
+         console.log(orderId)
+         socket.join(orderId)
+     })
+ })
+
+
+ eventEmitter.on('orderUpdated', (data) => {
+     io.to(`order_${data.id}`).emit('orderUpdated', data)
+ })
+
+
+ eventEmitter.on('orderPlaced', (data) => {
+     io.to('adminRoom').emit('orderPlaced', data)
  })
