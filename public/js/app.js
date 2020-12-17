@@ -26912,6 +26912,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var noty__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! noty */ "./node_modules/noty/lib/noty.js");
 /* harmony import */ var noty__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(noty__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _admin__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./admin */ "./resources/js/admin.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_3__);
+
 
 
 
@@ -26920,7 +26923,7 @@ var cartCounter = document.querySelector('#cartCounter');
 
 function updateCart(pizza) {
   axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/update-cart', pizza).then(function (res) {
-    console.log(res);
+    // console.log(res)
     cartCounter.innerText = res.data.totalQty, new noty__WEBPACK_IMPORTED_MODULE_1___default.a({
       type: 'success',
       timeout: 1000,
@@ -26952,7 +26955,37 @@ if (alertMsg) {
   }, 2000);
 }
 
-Object(_admin__WEBPACK_IMPORTED_MODULE_2__["initAdmin"])();
+Object(_admin__WEBPACK_IMPORTED_MODULE_2__["initAdmin"])(); //Change order status
+
+var statuses = document.querySelectorAll('.status_line');
+var hiddenInput = document.querySelector('#hiddenInput');
+var order = hiddenInput ? hiddenInput.value : null;
+order = JSON.parse(order);
+console.log(order);
+var time = document.createElement('small');
+
+function updateStatus(order) {
+  var stepCompleted = true;
+  statuses.forEach(function (status) {
+    var dataProp = status.dataset.status;
+
+    if (stepCompleted) {
+      status.classList.add('step-completed');
+    }
+
+    if (dataProp === order.status) {
+      stepCompleted = false;
+      time.innerText = moment__WEBPACK_IMPORTED_MODULE_3___default()(order.updatedAt).format('hh:mm A');
+      status.appendChild(time);
+
+      if (status.nextElementSibling) {
+        status.nextElementSibling.classList.add('current');
+      }
+    }
+  });
+}
+
+updateStatus(order);
 
 /***/ }),
 

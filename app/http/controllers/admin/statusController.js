@@ -10,7 +10,7 @@ function statusController() {
 
 
 
-                res.redirect('/admin/orders')
+                return res.redirect('/admin/orders')
             })
         }
     }
